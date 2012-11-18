@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>
+	$0
+</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Indent Inside Block</string>
+	<key>scope</key>
+	<string>text.html.handlebars &amp; (L:punctuation.definition.tag.end.handlebars &amp; R:punctuation.definition.tag.begin.handlebars)</string>
+	<key>uuid</key>
+	<string>295D7335-1D52-4FDD-BABF-779C6097CC8D</string>
+</dict>
+</plist>

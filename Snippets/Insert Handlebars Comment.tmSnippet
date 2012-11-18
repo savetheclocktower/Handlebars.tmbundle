@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>{{! ${0:$TM_SELECTED_TEXT} }}</string>
+	<key>keyEquivalent</key>
+	<string>~@/</string>
+	<key>name</key>
+	<string>Insert Handlebars Comment</string>
+	<key>scope</key>
+	<string>text.html.handlebars</string>
+	<key>uuid</key>
+	<string>01818EA9-C572-4468-890B-18FB468BC7FB</string>
+</dict>
+</plist>

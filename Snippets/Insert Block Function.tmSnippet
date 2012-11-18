@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<string>#$1}}$0{{/${1/\s+.*$//g}</string>
+	<key>keyEquivalent</key>
+	<string>#</string>
+	<key>name</key>
+	<string>Insert Block Function</string>
+	<key>scope</key>
+	<string>text.html.handlebars &amp; (L:punctuation.definition.tag.begin.handlebars &amp; R:punctuation.definition.tag.end.handlebars)</string>
+	<key>uuid</key>
+	<string>310BFCC8-906D-4959-A703-ACDA4EA9B461</string>
+</dict>
+</plist>

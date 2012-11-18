@@ -20,6 +20,27 @@
 	<key>patterns</key>
 	<array>
 		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.begin.handlebars</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.end.handlebars</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>so that we can capture the case where the cursor is in the middle</string>
+			<key>match</key>
+			<string>(\{\{)(\}\})</string>
+			<key>name</key>
+			<string>meta.embedded.empty.handlebars</string>
+		</dict>
+		<dict>
 			<key>include</key>
 			<string>#handlebars-blocks</string>
 		</dict>
@@ -40,7 +61,7 @@
 					<key>begin</key>
 					<string>\s</string>
 					<key>end</key>
-					<string>(?=\s|\})</string>
+					<string>(?=\s|\}|$)</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -110,27 +131,6 @@
 		<dict>
 			<key>patterns</key>
 			<array>
-				<dict>
-					<key>captures</key>
-					<dict>
-						<key>1</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.begin.handlebars</string>
-						</dict>
-						<key>2</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.tag.end.handlebars</string>
-						</dict>
-					</dict>
-					<key>comment</key>
-					<string>so that we can capture the case where the cursor is in the middle</string>
-					<key>match</key>
-					<string>(\{\{)(\}\})</string>
-					<key>name</key>
-					<string>meta.embedded.control.empty.handlebars</string>
-				</dict>
 				<dict>
 					<key>begin</key>
 					<string>(\{\{)(#(?i:with|each)\b)\s+([a-zA-Z\-\.\/]+)(?=\s|\})</string>
@@ -346,7 +346,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>(\{\{)(#[A-Za-z_]+\b)</string>
+					<string>(\{\{)(#[A-Za-z_]*)</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -357,7 +357,7 @@
 						<key>2</key>
 						<dict>
 							<key>name</key>
-							<string>entity.name.function.inline.any.handlebars</string>
+							<string>entity.name.tag.inline.any.handlebars</string>
 						</dict>
 					</dict>
 					<key>comment</key>
@@ -398,7 +398,7 @@
 						<key>2</key>
 						<dict>
 							<key>name</key>
-							<string>entity.name.function.inline.any.handlebars</string>
+							<string>entity.name.tag.inline.any.handlebars</string>
 						</dict>
 					</dict>
 					<key>comment</key>
@@ -431,6 +431,7 @@
 						(\{\{) # opening braces
 						\s*    # optional space
 						(?=    # look ahead to...
+							\s*\}\}| # just space OR...
 							[A-Za-z0-9_$\.\/]+ # any valid characters for a property...
 							\s*  # optional space...
 							\}\} # ...and closing braces
@@ -466,7 +467,7 @@
 						<key>2</key>
 						<dict>
 							<key>name</key>
-							<string>entity.name.function.inline.any.handlebars</string>
+							<string>entity.name.tag.inline.any.handlebars</string>
 						</dict>
 					</dict>
 					<key>comment</key>

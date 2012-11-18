@@ -2,10 +2,24 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>comment</key>
+	<string>
+		Main Handlebars grammar.
+		We do it this way so that we can inject Handlebars syntax into certain
+		scopes without also injecting HTML syntax into those scopes. Consider a
+		STYLE block, for instance: within it, we should highlight CSS and
+		Handlebars, but _not_ HTML, because arbitrary HTML isn’t valid in that
+		context.
+		
+		Also, we inject a very lightweight grammar into HTML attribute strings so
+		that we can spot Handlebars directives inside them. We could go overboard
+		and implement the entire grammar in here, but we don’t want full syntax
+		highlighting — just something subtle that won’t make the string too loud.
+	</string>
 	<key>fileTypes</key>
 	<array>
 		<string>handlebars</string>
-                <string>hbs</string>
+		<string>hbs</string>
 	</array>
 	<key>foldingStartMarker</key>
 	<string>(?x)
@@ -21,165 +35,68 @@
 		|(^|\s)\}
 		|\{\{/
 		)</string>
+	<key>injections</key>
+	<dict>
+		<key>source.css.embedded.html - comment</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.handlebars</string>
+				</dict>
+			</array>
+		</dict>
+		<key>source.js.embedded.html - comment</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.handlebars</string>
+				</dict>
+			</array>
+		</dict>
+		<key>string.quoted.double.html</key>
+		<dict>
+			<key>comment</key>
+			<string>
+				These two need to be treated differently because single quotes can’t go
+				inside a single-quoted HTML string, and double quotes can’t go inside a
+				double-quoted HTML string.
+				
+				If we didn’t do this, we’d be able to put double quotes inside double
+				quotes and have it “look” right. It’s syntactically invalid, so it should
+				look incorrect.
+			</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#embedded-in-double-quotes</string>
+				</dict>
+			</array>
+		</dict>
+		<key>string.quoted.single.html</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#embedded-in-single-quotes</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>keyEquivalent</key>
 	<string>^~H</string>
 	<key>name</key>
-	<string>Handlebars</string>
+	<string>HTML (Handlebars)</string>
 	<key>patterns</key>
 	<array>
 		<dict>
-			<key>begin</key>
-			<string>(\{\{)((?i:collection|view)\b)\s+([A-Z][a-zA-Z\-.]+)\b</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.begin.handlebars</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.function.inline.any.handlebars</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>variable.other.assigned-class.handlebars</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\}\})</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.end.handlebars</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>meta.function.inline.other.handlebars.sproutcore</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#tag-stuff</string>
-				</dict>
-			</array>
-		</dict>
-		<dict>
-			<key>begin</key>
-			<string>(\{\{)([A-Za-z]+\b)</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.begin.handlebars</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.function.inline.any.handlebars</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\}\})</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.end.handlebars</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>meta.function.inline.other.handlebars</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#tag-stuff</string>
-				</dict>
-			</array>
-		</dict>
-		<dict>
-			<key>begin</key>
-			<string>(\{\{#)((?i:collection|view)\b)\s+([A-Z][a-zA-Z\-.]+)\b</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.begin.handlebars</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.function.block.start.handlebars</string>
-				</dict>
-				<key>3</key>
-				<dict>
-					<key>name</key>
-					<string>variable.other.assigned-class.handlebars</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\}\})</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.end.handlebars</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>meta.function.block.start.handlebars.sproutcore</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#tag-stuff</string>
-				</dict>
-			</array>
-		</dict>
-		<dict>
-			<key>begin</key>
-			<string>(\{\{/)((?i:collection|view)\b)</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.begin.handlebars</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.function.block.end.handlebars</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(\}\})</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.tag.end.handlebars</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>meta.function.block.end.handlebars.sproutcore</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#tag-stuff</string>
-				</dict>
-			</array>
+			<key>include</key>
+			<string>source.handlebars</string>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -188,209 +105,27 @@
 	</array>
 	<key>repository</key>
 	<dict>
-		<key>string-double-quoted</key>
+		<key>embedded-in-double-quotes</key>
 		<dict>
-			<key>begin</key>
-			<string>"</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.begin.html</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>"</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.end.html</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>string.quoted.double.html</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#embedded-code</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#entities</string>
-				</dict>
-			</array>
-		</dict>
-		<key>string-single-quoted</key>
-		<dict>
-			<key>begin</key>
-			<string>'</string>
-			<key>beginCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.begin.html</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>'</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>0</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.definition.string.end.html</string>
-				</dict>
-			</dict>
-			<key>name</key>
-			<string>string.quoted.single.html</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#embedded-code</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#entities</string>
-				</dict>
-			</array>
-		</dict>
-		<key>tag-generic-attribute</key>
-		<dict>
+			<key>comment</key>
+			<string>
+				Allows anything between double braces except for a double quote.
+			</string>
 			<key>match</key>
-			<string>\b([a-zA-Z\-:]+)</string>
+			<string>\{\{[^"]*?\}\}</string>
 			<key>name</key>
-			<string>entity.other.attribute-name.html</string>
+			<string>meta.embedded.directive.handlebars</string>
 		</dict>
-		<key>tag-id-attribute</key>
+		<key>embedded-in-single-quotes</key>
 		<dict>
-			<key>begin</key>
-			<string>\b(id)\b\s*(=)</string>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>entity.other.attribute-name.id.html</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>punctuation.separator.key-value.html</string>
-				</dict>
-			</dict>
-			<key>end</key>
-			<string>(?&lt;='|")</string>
+			<key>comment</key>
+			<string>
+				Allows anything between double braces except for a single quote.
+			</string>
+			<key>match</key>
+			<string>\{\{[A-Za-z0-9"\s\.\/]*?\}\}</string>
 			<key>name</key>
-			<string>meta.attribute-with-value.id.html</string>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>begin</key>
-					<string>"</string>
-					<key>beginCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.begin.html</string>
-						</dict>
-					</dict>
-					<key>contentName</key>
-					<string>meta.toc-list.id.html</string>
-					<key>end</key>
-					<string>"</string>
-					<key>endCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.end.html</string>
-						</dict>
-					</dict>
-					<key>name</key>
-					<string>string.quoted.double.html</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>include</key>
-							<string>#embedded-code</string>
-						</dict>
-						<dict>
-							<key>include</key>
-							<string>#entities</string>
-						</dict>
-					</array>
-				</dict>
-				<dict>
-					<key>begin</key>
-					<string>'</string>
-					<key>beginCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.begin.html</string>
-						</dict>
-					</dict>
-					<key>contentName</key>
-					<string>meta.toc-list.id.html</string>
-					<key>end</key>
-					<string>'</string>
-					<key>endCaptures</key>
-					<dict>
-						<key>0</key>
-						<dict>
-							<key>name</key>
-							<string>punctuation.definition.string.end.html</string>
-						</dict>
-					</dict>
-					<key>name</key>
-					<string>string.quoted.single.html</string>
-					<key>patterns</key>
-					<array>
-						<dict>
-							<key>include</key>
-							<string>#embedded-code</string>
-						</dict>
-						<dict>
-							<key>include</key>
-							<string>#entities</string>
-						</dict>
-					</array>
-				</dict>
-			</array>
-		</dict>
-		<key>tag-stuff</key>
-		<dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>include</key>
-					<string>#tag-id-attribute</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#tag-generic-attribute</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#string-double-quoted</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#string-single-quoted</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#embedded-code</string>
-				</dict>
-			</array>
+			<string>meta.embedded.directive.handlebars</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>

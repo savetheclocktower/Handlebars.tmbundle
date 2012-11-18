@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby -wKU
+
+# Attempts to open the partial whose name is under the cursor. For instance,
+# if you've got...
+#
+#     {{&gt; authorMeta}}
+#
+# ...then you can put the cursor anywhere in the word "authorMeta", hit
+# ENTER (fn + return on laptop keyboards), and have that file open in
+# TextMate.
+#
+# This assumes that there is a file named "authorMeta" in the same directory
+# as the current file, and that it has the same file extension as the current
+# file.
+#
+# If this file doesn't exist, the command does nothing.
+#
+# TODO:
+#
+# 1. Search in more than just the current directory. Maybe traverse upward
+#    until we hit the project root; maybe search a user-configurable list of
+#    paths that can be defined in .tm_properties.
+# 2. If there's more than one match, pop up a menu of possible matches.
+#
+#
+require 'pathname'
+
+name = STDIN.read
+p    = Pathname.new(ENV['TM_FILEPATH'])
+
+# Assume that the include is in the same directory and has the same extension.
+# (TODO: Can this be made more robust?)
+new_path = File.join(p.dirname, "#{name}#{p.extname}")
+
+if File.exists?(new_path)
+  system "mate #{new_path}"
+else
+  puts "Couldn’t find partial:\n#{new_path}"
+end  
+</string>
+	<key>input</key>
+	<string>scope</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Open Partial</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>scope</key>
+	<string>variable.other.include.handlebars</string>
+	<key>uuid</key>
+	<string>8A3658CC-D5EF-4F3E-93C3-717259110BEF</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

@@ -34,15 +34,59 @@
 				</dict>
 			</dict>
 			<key>comment</key>
-			<string>so that we can capture the case where the cursor is in the middle</string>
+			<string>
+			So that we can capture the case where the cursor is in the middle.
+			
+			This used to be `meta.embedded` instead of `meta.x-embedded`, but if
+			you’ve got `meta.embedded` themed with a background color (like I do),
+			the background color of the entire line flickers on certain snippets.
+			Drives me nuts.
+			
+			`{{}}` isn’t a valid embed, so I think it’s OK not to mark it as
+			`meta.embedded`. But if you disagree, you can change it back. The relevant
+			commands/snippets will still work fine; they hook into the captures below.
+			</string>
 			<key>match</key>
 			<string>(\{\{)(\}\})</string>
 			<key>name</key>
-			<string>meta.embedded.empty.handlebars</string>
+			<string>meta.x-embedded.empty.handlebars</string>
 		</dict>
 		<dict>
 			<key>include</key>
 			<string>#handlebars-blocks</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>^(\{\{\!)\s*\n</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.begin.handlebars</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>weird convention for BV template metadata</string>
+			<key>end</key>
+			<string>^(\}\})</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.tag.end.handlebars</string>
+				</dict>
+			</dict>
+			<key>name</key>
+			<string>meta.metadata.bv.handlebars</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>source.json</string>
+				</dict>
+			</array>
 		</dict>
 		<dict>
 			<key>include</key>
@@ -65,12 +109,8 @@
 					<key>patterns</key>
 					<array>
 						<dict>
-							<key>comment</key>
-							<string>any identifier between two spaces (or a space and a closing brace)</string>
-							<key>match</key>
-							<string>(?&lt;=\s)[a-zA-Z0-9\.\/]+(?=\s|\})</string>
-							<key>name</key>
-							<string>variable.parameter.function.handlebars</string>
+							<key>include</key>
+							<string>#single-function-param</string>
 						</dict>
 						<dict>
 							<key>begin</key>
@@ -96,6 +136,10 @@
 							<array>
 								<dict>
 									<key>include</key>
+									<string>#identifier</string>
+								</dict>
+								<dict>
+									<key>include</key>
 									<string>#string-single-quoted</string>
 								</dict>
 								<dict>
@@ -113,6 +157,10 @@
 							<string>(?=\s|\})</string>
 							<key>patterns</key>
 							<array>
+								<dict>
+									<key>include</key>
+									<string>#identifier</string>
+								</dict>
 								<dict>
 									<key>include</key>
 									<string>#string-single-quoted</string>
@@ -200,7 +248,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>(\{\{)(#(?i:if|unless)\b)\s+([\.A-Za-z0-9$_\s\/]+)(?:\b|(?=\}\}))</string>
+					<string>(\{\{)(#(?i:if|unless)\b)(?:\s+([\.A-Za-z0-9$_\s\/]+))?(?:\b|(?=\}\}))</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -303,7 +351,7 @@
 				</dict>
 				<dict>
 					<key>begin</key>
-					<string>(\{\{)(\&gt;)\s+([A-Za-z]+)(?=\s|\})</string>
+					<string>(\{\{)(\&gt;)\s+([A-Za-z0-9\-_\$]+)(?=\s|\})</string>
 					<key>beginCaptures</key>
 					<dict>
 						<key>1</key>
@@ -528,6 +576,22 @@
 				</dict>
 			</array>
 		</dict>
+		<key>identifier</key>
+		<dict>
+			<key>match</key>
+			<string>(?&lt;==|\s)[a-zA-Z0-9\.\/]+(?=\s|\})</string>
+			<key>name</key>
+			<string>variable.parameter.function.handlebars</string>
+		</dict>
+		<key>single-function-param</key>
+		<dict>
+			<key>comment</key>
+			<string>any identifier between two spaces (or a space and a closing brace)</string>
+			<key>match</key>
+			<string>(?&lt;=\s)[a-zA-Z0-9\.\/]+(?=\s|\})</string>
+			<key>name</key>
+			<string>variable.parameter.function.handlebars</string>
+		</dict>
 		<key>string-double-quoted</key>
 		<dict>
 			<key>begin</key>
@@ -654,7 +718,7 @@
 						</dict>
 					</dict>
 					<key>name</key>
-					<string>string.quoted.double.html</string>
+					<string>string.quoted.double.handlebars</string>
 					<key>patterns</key>
 					<array>
 						<dict>
@@ -691,7 +755,7 @@
 						</dict>
 					</dict>
 					<key>name</key>
-					<string>string.quoted.single.html</string>
+					<string>string.quoted.single.handlebars</string>
 					<key>patterns</key>
 					<array>
 						<dict>

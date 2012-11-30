@@ -9,7 +9,7 @@ Built for [TextMate 2][textmate]; I'm not sure it will work at all in TextMate 1
 
 ### Indentation rules, code folding
 
-TextMate will know to indent lines inside block functions, conditionals and the like, and can also fold these constructs.
+TextMate will know to indent lines inside block helpers, conditionals, and the like, and can also fold these constructs.
 
 ### Snippets
 
@@ -29,19 +29,21 @@ Pressing <kbd>&gt;</kbd> inside the braces triggers an include-partial snippet l
 
 ![include-partial snippet animation](http://i.imgur.com/vdfF8.gif)
 
-If the bundle knows where your templates are, the snippet can offer a list of possible completions for the partial name. If not, it won't offer any completions, but the rest of the snippet will work just fine. (See the Configuration section below.)
+If the bundle knows where your templates are, the snippet can offer a list of possible completions for the partial name. If not, it won't offer any completions, but the rest of the snippet will work just fine. (See [Configuration][] below.)
 
 ### Open partial
 
 When the cursor is inside the name of a partial (e.g., the "authorMeta" part of `{{> authorMeta}}`), pressing <kbd>Enter</kbd> (or <kbd>fn</kbd> + <kbd>Return</kbd> on laptop keyboards) will attempt to open that partial for editing.
 
-If the bundle knows where your templates are, it can search all possible template locations, and open the first one it finds. If it doesn't, it'll look within the directory of the original file.
+If the bundle knows where your templates are, it can search all possible template locations, and open the first one it finds. If it doesn't, it'll look within the directory of the original file. (See [Configuration][] below.)
 
 ### Open helper
 
 Similarly, when the cursor is inside the name of a helper (e.g., the `prune` part of `{{prune text 30}}`, or the `#list` part of `{{#list Foo}}…{{/list}}`), pressing <kbd>Enter</kbd> (<kbd>fn</kbd> + <kbd>Return</kbd>) will attempt to open that partial for editing.
 
-This presumes that each helper has its own file, and that the file has the same name as the helper. (In the examples above, the command will look for `prune.js` and `list.js`, respectively.) If the bundle knows where your helpers are, it will search those folders for files of that name; otherwise it will do nothing.
+This presumes that each helper has its own file, and that the file has the same name as the helper. (In the examples above, the command will look for `prune.js` and `list.js`, respectively.) If the bundle knows where your helpers are, it will search those folders for files of that name; otherwise it will do nothing. (See [Configuration][] below.)
+
+[configuration]: #configuration
 
 ### String scope injections
 

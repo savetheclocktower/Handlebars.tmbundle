@@ -11,31 +11,73 @@ Built for [TextMate 2][textmate]; I'm not sure it will work at all in TextMate 1
 
 TextMate will know to indent lines inside block functions, conditionals and the like, and can also fold these constructs.
 
-### Smart completion
+### Snippets
 
-When the cursor sits between two nested sets of braces (`{{}}`), pressing `#` triggers a block function snippet like so:
+The bundle offers a couple of useful snippets for completing Handlebars tags. **When the cursor sits between two nested sets of braces (`{{}}`), certain keys will trigger snippets:**
 
-![smart completion animation](http://i.imgur.com/mfl9z.gif)
+#### Block helper snippet
+
+Pressing <kbd>#</kbd> inside the braces triggers a block helper snippet like so:
+
+![block helper snippet animation](http://i.imgur.com/9U742.gif)
 
 The closing tag is automatically generated, and fills in the name of the function as you type; from there you can <kbd>TAB</kbd> into the area between the opening tag and the closing tag. Hitting <kbd>Return</kbd> will move you to a new line and indent the block as you expect.
 
-### Follow partials
+#### Include partial snippet
 
-When the cursor is inside the name of a partial (e.g., the "authorMeta" part of `{{> authorMeta}}`), pressing <kbd>Enter</kbd> (<kbd>fn</kbd> + <kbd>Return</kbd> on laptop keyboards) will attempt to open that partial for editing. (Right now, this only works if the partial is in the same directory as the first file and has the same extension, but I might make this more robust in the future.)
+Pressing <kbd>&gt;</kbd> inside the braces triggers an include-partial snippet like so:
+
+![include-partial snippet animation](http://i.imgur.com/vdfF8.gif)
+
+If the bundle knows where your templates are, the snippet can offer a list of possible completions for the partial name. If not, it won't offer any completions, but the rest of the snippet will work just fine. (See the Configuration section below.)
+
+### Open partial
+
+When the cursor is inside the name of a partial (e.g., the "authorMeta" part of `{{> authorMeta}}`), pressing <kbd>Enter</kbd> (or <kbd>fn-Return</kbd> on laptop keyboards) will attempt to open that partial for editing.
+
+If the bundle knows where your templates are, it can search all possible template locations, and open the first one it finds. If it doesn't, it'll look within the directory of the original file.
+
+### Open helper
+
+Similarly, when the cursor is inside the name of a helper (e.g., the "prune" part of `{{prune text 30}}`, or the `#list` part of `{{#list Foo}}…{{/list}}`), pressing <kbd>Enter</kbd> (<kbd>fn-Return</kbd>) will attempt to open that partial for editing.
+
+This presumes that each helper has its own file, and that the file has the same name as the helper. (In the examples above, the command will look for `prune.js` and `list.js`, respectively.) If the bundle knows where your helpers are, it will search those folders for files of that name; otherwise it will do nothing.
 
 ### String scope injections
 
 The annoying thing about HTML templating languages in TextMate 1 was that they couldn't pick up on stuff like this…
 
-![Example without injection grammar](http://i.imgur.com/Cv6J1.png)
+![example without injection grammar](http://i.imgur.com/Cv6J1.png)
 
 …unless you felt like writing a bunch of rules to override the patterns in the HTML grammar.
 
 TextMate 2 fixes this, to an extent, with [injections][]. Injections allow a bundle to add its own patterns into a scope captured by another bundle. So we can add some patterns that match only inside HTML strings, like so:
 
-![Example with injection grammar](http://i.imgur.com/pD2jW.png)
+![example with injection grammar](http://i.imgur.com/pD2jW.png)
 
 We don't inject the whole Handlebars grammar into strings, because it's likely you don't want the full range of syntax highlighting inside strings. Handlebars directives inside HTML strings have the scope name `meta.embedded.directive.handlebars`, and many themes have a style for the `meta.embedded` scope. If yours doesn't, consider adding it.
+
+## Configuration
+
+Certain features of the Handlebars bundle can be configured through environment variables; these are typically defined in a folder's `.tm_properties` file, like so:
+
+    TM_HANDLEBARS_HELPERS_GLOB   = "${CWD}/helpers/*.js"
+    TM_HANDLEBARS_TEMPLATES_GLOB = "${CWD}/templates/*.hbs"
+
+These variables use [shell glob syntax][] (as interpreted by Ruby).
+    
+* `TM_HANDLEBARS_HELPERS_GLOB`: A glob that describes all the files that contain Handlebars helpers. Necessary for the "Open Helper" command.
+* `TM_HANDLEBARS_TEMPLATES_GLOB`: A glob that describes all the template files defined in this project. Necessary for the "Open Partial" command, and for the name completion in the "Insert Partial" snippet.
+
+## Dialog
+
+The completion help requires that `tm_dialog2` is installed. To figure out if it's working correctly for you, type into an empty TextMate document...
+
+    "$DIALOG" help
+    
+...then press <kbd>Ctrl-R</kbd> to execute the current line. If you see a list of registered commands, then `tm_dialog2` is installed and working; if you get an error, it means that the Dialog plugin is not installed correctly.
+
+I was in this situation myself, and here's what (I think) I did to get it working: dig into the TextMate application bundle (`/Applications/TextMate.app/Contents/PlugIns`) and copy the file `Dialog2.tmplugin` to the directory `~/Library/Application Support/TextMate/PlugIns`. (Note that directory name: `TextMate`, not `Avian`, and `PlugIns`, not `Plugins`.) After you restart TextMate, try `"$DIALOG" help` again and see if you get a result.
 
 ## Grammars
 
@@ -48,25 +90,25 @@ For example, if you wanted to create a grammar that would highlight handlebars s
     {
       patterns = (
         { include = 'source.handlebars'; },
-        { include = 'text.html.textile'; },
+        { include = 'text.xml'; },
       );
     }
-    
+
 Obviously you'd want to add stuff to it, but that's the basic idea. (Depending on the grammar, you might have to supplement this with injections; consult the `text.html.handlebars` grammar for guidance.)
 
 ## Screenshots
 
 ### Vibrant Ink Redux theme
 
-![Screenshot (Vibrant Ink Redux theme)](http://i.imgur.com/c3mZj.png)
+![screenshot (Vibrant Ink Redux theme)](http://i.imgur.com/c3mZj.png)
 
 ### Mac Classic theme
 
-![Screenshot (Mac Classic theme)](http://i.imgur.com/zFJtN.png)
+![screenshot (Mac Classic theme)](http://i.imgur.com/zFJtN.png)
 
 ### Cobalt theme
 
-![Screenshot (Cobalt theme)](http://i.imgur.com/BcwY8.png)
+![screenshot (Cobalt theme)](http://i.imgur.com/BcwY8.png)
 
 ## Installation
 
@@ -74,7 +116,7 @@ To install via Git:
 
     mkdir -p ~/Library/Application\ Support/TextMate/Bundles
     cd ~/Library/Application\ Support/TextMate/Bundles
-    git clone git://github.com/drnic/Handlebars.tmbundle.git
+    git clone git://github.com/savetheclocktower/Handlebars.tmbundle.git
     osascript -e 'tell app "TextMate" to reload bundles'
     
 To view or fork the source, visit the [Handlebars.tmbundle project on GitHub][github].
@@ -84,6 +126,7 @@ To view or fork the source, visit the [Handlebars.tmbundle project on GitHub][gi
 [injections]: http://blog.macromates.com/2012/injection-grammars-project-variables/
 [handlebars]: http://handlebarsjs.com
 [textmate]:   https://github.com/textmate/textmate
+[shell glob syntax]: http://ruby-doc.org/core-1.9.3/Dir.html#method-c-glob
 
 
 ## License
@@ -91,6 +134,7 @@ To view or fork the source, visit the [Handlebars.tmbundle project on GitHub][gi
 (The MIT License)
 
 Copyright (c) 2010 Dr Nic Williams, drnicwilliams@gmail.com
+Copyright (c) 2012 Andrew Dupont,   mit@andrewdupont.net
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

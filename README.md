@@ -135,7 +135,7 @@ To view or fork the source, visit the [Handlebars.tmbundle project on GitHub][gi
 
 (The MIT License)
 
-Copyright (c) 2010 Dr Nic Williams, drnicwilliams@gmail.com
+Copyright (c) 2010 Dr Nic Williams, drnicwilliams@gmail.com  
 Copyright (c) 2012 Andrew Dupont,   mit@andrewdupont.net
 
 Permission is hereby granted, free of charge, to any person obtaining

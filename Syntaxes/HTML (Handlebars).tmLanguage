@@ -114,7 +114,7 @@
 			<key>match</key>
 			<string>\{\{[^"]*?\}\}</string>
 			<key>name</key>
-			<string>meta.embedded.directive.handlebars</string>
+			<string>meta.embedded.directive.within-double-quotes.handlebars</string>
 		</dict>
 		<key>embedded-in-single-quotes</key>
 		<dict>
@@ -125,7 +125,7 @@
 			<key>match</key>
 			<string>\{\{[A-Za-z0-9"\s\.\/]*?\}\}</string>
 			<key>name</key>
-			<string>meta.embedded.directive.handlebars</string>
+			<string>meta.embedded.directive.within-single-quotes.handlebars</string>
 		</dict>
 	</dict>
 	<key>scopeName</key>

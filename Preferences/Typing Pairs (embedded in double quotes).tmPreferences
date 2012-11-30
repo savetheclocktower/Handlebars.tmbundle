@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>name</key>
+	<string>Typing Pairs (embedded in double quotes)</string>
+	<key>scope</key>
+	<string>meta.embedded.directive.within-double-quotes.handlebars</string>
+	<key>settings</key>
+	<dict>
+		<key>smartTypingPairs</key>
+		<array>
+			<array>
+				<string>'</string>
+				<string>'</string>
+			</array>
+		</array>
+	</dict>
+	<key>uuid</key>
+	<string>20EB7756-850E-42DE-B181-ED5BD53CC5AF</string>
+</dict>
+</plist>

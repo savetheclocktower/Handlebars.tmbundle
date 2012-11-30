@@ -16,8 +16,8 @@
 		|--&gt;
 		|&lt;\?(php)?\s+(else(if)?|end(if|for(each)?|while))
 		|\}
-		|\{\{\/
-		)</string>
+		|\{\{(?:\/|else)
+	)</string>
 		<key>increaseIndentPattern</key>
 		<string>(?x)
 		&lt;(?!\?|area|base|br|col|frame|hr|html|img|input|link|meta|param|[^&gt;]*/&gt;)
@@ -26,6 +26,7 @@
 		|&lt;\?php.+?\b(if|else(?:if)?|for(?:each)?|while)\b.*:(?!.*end\1)
 		|\{[^}"']*$
 		|\#.*\}\}$
+		|else\}\}$
 		</string>
 		<key>indentNextLinePattern</key>
 		<string>&lt;!DOCTYPE(?!.*&gt;)</string>

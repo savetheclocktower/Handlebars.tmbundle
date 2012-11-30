@@ -33,18 +33,36 @@
 require 'pathname'
 
 name = STDIN.read
-p    = Pathname.new(ENV['TM_FILEPATH'])
 
-# Assume that the include is in the same directory and has the same extension.
-# (TODO: Can this be made more robust?)
-new_path = File.join(p.dirname, "#{name}#{p.extname}")
-
-if File.exists?(new_path)
-  system "mate #{new_path}"
+# Look for a glob that tells us where the project's templates are.
+#
+# Failing that, make a glob that will match a file with the given name and
+# the same extension as the original file.
+# 
+# Failing _that_, fail silently, as though this command never existed.
+# 
+if ENV.key?('TM_HANDLEBARS_TEMPLATES_GLOB')
+  glob = ENV['TM_HANDLEBARS_TEMPLATES_GLOB']
+elsif ENV.key?('TM_FILEPATH')
+  file_path = Pathname.new(ENV['TM_FILEPATH'])
+  glob = file_path.join(file_path.dirname, "#{name}#{file_path.extname}").to_s
 else
-  puts "Couldn’t find partial:\n#{new_path}"
-end  
-</string>
+  exit
+end
+
+paths = Pathname::glob(glob)
+match = paths.detect { |p| p.basename.to_s.start_with?("#{name}.") &amp;&amp; p.file? }
+
+if match
+  system "mate #{match}"
+else
+  puts "Couldn’t find a partial with name: #{name}."
+  if ENV.key?('TM_HANDLEBARS_TEMPLATES_GLOB')
+    puts "(Used your TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
+  else
+    puts "(Searched the current directory; to search other directories, or file extensions other than #{file_path.extname}, add a TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
+  end
+end</string>
 	<key>input</key>
 	<string>scope</string>
 	<key>inputFormat</key>

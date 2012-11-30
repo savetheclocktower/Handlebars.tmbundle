@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby -wKU
+require ENV['TM_BUNDLE_SUPPORT'] + '/helpers'
+require 'pathname'
+
+puts snippet_inside_braces({
+  :line    =&gt; STDIN.read,
+  :index   =&gt; ENV['TM_LINE_INDEX'].to_i - 1,
+  :snippet =&gt; "&gt; ${1:partialName} ${2:.}"
+})
+
+require ENV['TM_BUNDLE_SUPPORT'] + '/helpers'
+require 'pathname'
+
+# Fail silently. The snippet will still work without pathname completion.
+exit unless defined?(TM_DIALOG) || ENV.key?('DIALOG')
+
+# Show a popup with a list of the templates that already exist.
+#
+# To build a list of completions, we need the user to tell us where their
+# templates are through an environment variable. Ideally, we want a Unix
+# shell glob pointing to the templates themselves, but failing that we can
+# assume a file extension as long as the folder(s) that contain templates
+# are set in a different variable.
+#
+# Otherwise, we can just fail silently. The snippet will still work fine; it
+# just won't show a completion popup.
+#
+if ENV.key?('TM_HANDLEBARS_TEMPLATES_GLOB')
+  pattern = ENV['TM_HANDLEBARS_TEMPLATES_GLOB']
+elsif ENV.key?('TM_HANDLEBARS_TEMPLATES_PATH')
+  pattern = %Q{#{ENV['TM_HANDLEBARS_TEMPLATES_PATH']}/*.hbs}
+else
+  exit
+end
+
+pathnames = Pathname::glob(pattern)
+
+# Turn the pathnames into identifiers suitable for inclusion in a list of
+# partials, with duplicates filtered out. (If there are duplicates, it's not
+# up to us to resolve the ambiguity.)
+list = []
+
+pathnames.each do |pn|
+  next unless pn.file?
+  bn = pn.basename
+  list &lt;&lt; bn.to_s.split('.')[0]
+end
+
+show_popup(list.uniq.sort)
+</string>
+	<key>input</key>
+	<string>line</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string>&gt;</string>
+	<key>name</key>
+	<string>Insert Partial</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>snippet</string>
+	<key>outputLocation</key>
+	<string>replaceInput</string>
+	<key>scope</key>
+	<string>text.html.handlebars &amp; (L:punctuation.definition.tag.begin.handlebars &amp; R:punctuation.definition.tag.end.handlebars)</string>
+	<key>uuid</key>
+	<string>E00E3331-04E9-4A46-B855-502F96884789</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

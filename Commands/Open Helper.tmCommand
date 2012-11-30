@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>beforeRunningCommand</key>
+	<string>nop</string>
+	<key>command</key>
+	<string>#!/usr/bin/env ruby -wKU
+require 'pathname'
+
+unless ENV.key?('TM_HANDLEBARS_HELPERS_GLOB')
+  puts "You must define TM_HANDLEBARS_HELPERS_GLOB in your .tm_properties file."
+  exit
+end
+
+paths  = Pathname::glob(ENV['TM_HANDLEBARS_HELPERS_GLOB'])
+name   = STDIN.read.sub(/^(?:#|\/)/, '')
+target = paths.detect { |p| p.basename.to_s.start_with?("#{name}.") &amp;&amp; p.file? }
+
+if target
+  `mate #{target}`
+else
+  puts "Can’t find file named: #{name}"
+  puts "(Check your TM_HANDLEBARS_HELPERS_GLOB variable.)"
+end</string>
+	<key>input</key>
+	<string>scope</string>
+	<key>inputFormat</key>
+	<string>text</string>
+	<key>keyEquivalent</key>
+	<string></string>
+	<key>name</key>
+	<string>Open Helper</string>
+	<key>outputCaret</key>
+	<string>afterOutput</string>
+	<key>outputFormat</key>
+	<string>text</string>
+	<key>outputLocation</key>
+	<string>toolTip</string>
+	<key>scope</key>
+	<string>entity.name.tag.inline.any.handlebars</string>
+	<key>uuid</key>
+	<string>839C262D-65D7-49F7-B803-465DA55742EB</string>
+	<key>version</key>
+	<integer>2</integer>
+</dict>
+</plist>

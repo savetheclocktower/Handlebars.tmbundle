@@ -4,6 +4,8 @@
 <dict>
 	<key>content</key>
 	<string>#$1}}$0{{/${1/\s+.*$//g}</string>
+	<key>isDisabled</key>
+	<false/>
 	<key>keyEquivalent</key>
 	<string>#</string>
 	<key>name</key>

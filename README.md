@@ -43,8 +43,6 @@ Similarly, when the cursor is inside the name of a helper (e.g., the `prune` par
 
 This presumes that each helper has its own file, and that the file has the same name as the helper. (In the examples above, the command will look for `prune.js` and `list.js`, respectively.) If the bundle knows where your helpers are, it will search those folders for files of that name; otherwise it will do nothing. (See [Configuration][] below.)
 
-[configuration]: #configuration
-
 ### String scope injections
 
 The annoying thing about HTML templating languages in TextMate 1 was that they couldn't pick up on stuff like this…
@@ -79,7 +77,7 @@ The completion help requires that `tm_dialog2` is installed. To figure out if it
     
 ...then press <kbd>Ctrl</kbd> + <kbd>R</kbd> to execute the current line. If you see a list of registered commands, then `tm_dialog2` is installed and working; if you get an error, it means that the Dialog plugin is not installed correctly.
 
-I was in this situation myself, and here's what (I think) I did to get it working: dig into the TextMate application bundle (`/Applications/TextMate.app/Contents/PlugIns`) and copy the file `Dialog2.tmplugin` to the directory `~/Library/Application Support/TextMate/PlugIns`. (Note that directory name: `TextMate`, not `Avian`, and `PlugIns`, not `Plugins`.) After you restart TextMate, try `"$DIALOG" help` again and see if you get a result.
+If it isn't working, check both `/Library/Application Support/TextMate/PlugIns` and `~/Library/Application Support/TextMate/PlugIns` and check for old versions of `Dialog.tmplugin` or `Dialog2.tmplugin`. If you find any, remove them.
 
 ## Grammars
 
@@ -116,8 +114,8 @@ Obviously you'd want to add stuff to it, but that's the basic idea. (Depending o
 
 To install via Git:
 
-    mkdir -p ~/Library/Application\ Support/TextMate/Bundles
-    cd ~/Library/Application\ Support/TextMate/Bundles
+    mkdir -p ~/Library/Application\ Support/Avian/Pristine\ Copy/Bundles
+    cd ~/Library/Application\ Support/Avian/Pristine\ Copy/Bundles
     git clone git://github.com/savetheclocktower/Handlebars.tmbundle.git
     osascript -e 'tell app "TextMate" to reload bundles'
     
@@ -129,6 +127,8 @@ To view or fork the source, visit the [Handlebars.tmbundle project on GitHub][gi
 [handlebars]: http://handlebarsjs.com
 [textmate]:   https://github.com/textmate/textmate
 [shell glob syntax]: http://ruby-doc.org/core-1.9.3/Dir.html#method-c-glob
+[configuration]: #configuration
+
 
 
 ## License

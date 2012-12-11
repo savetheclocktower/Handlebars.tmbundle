@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby -wKU
 # encoding: UTF-8
 require ENV['TM_SUPPORT_PATH'] + '/lib/escape'
-require ENV['TM_BUNDLE_SUPPORT'] + '/lib/plist'
+require ENV['TM_SUPPORT_PATH'] + '/lib/ui'
 
 if ENV.key?('DIALOG') && !defined?(TM_DIALOG)
   TM_DIALOG = e_sh(ENV['DIALOG'])
@@ -34,23 +34,6 @@ def snippet_inside_braces(opts)
   line_parts.join(snippet)
 end
 
-# Show a completion popup.
-#
-# This is made possible by tm_dialog2, but we're not using the builtin Ruby
-# library (TextMate::UI) because it's in an unreliable state. Its plist
-# bundle doesn't work properly in recent versions of OS X; that's why we
-# include our own in this bundle. And about half of the TextMate::UI
-# methods use a version of the tm_dialog2 command syntax that is no longer
-# supported.
-#
 def show_popup(choices)
-  # Fail silently when we can't find tm_dialog2.
-  return unless defined?(TM_DIALOG)
-  
-  unless choices[0].is_a?(Hash)
-    choices.map! { |c| { 'display' => c.to_s } }
-  end
-  
-  command = %Q{#{TM_DIALOG} popup --suggestions #{e_sh choices.to_plist}}
-  `#{command}`
+  TextMate::UI.complete(choices)
 end

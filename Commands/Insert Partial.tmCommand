@@ -11,12 +11,9 @@ require 'pathname'
 
 puts snippet_inside_braces({
   :line    =&gt; STDIN.read,
-  :index   =&gt; ENV['TM_LINE_INDEX'].to_i - 1,
+  :index   =&gt; ENV['TM_LINE_INDEX'].to_i.pred,
   :snippet =&gt; "&gt; ${1:partialName} ${2:.}"
 })
-
-require ENV['TM_BUNDLE_SUPPORT'] + '/helpers'
-require 'pathname'
 
 # Fail silently. The snippet will still work without pathname completion.
 exit unless defined?(TM_DIALOG) || ENV.key?('DIALOG')
@@ -74,6 +71,6 @@ show_popup(list.uniq.sort)
 	<key>uuid</key>
 	<string>E00E3331-04E9-4A46-B855-502F96884789</string>
 	<key>version</key>
-	<integer>2</integer>
+	<string>2</string>
 </dict>
 </plist>

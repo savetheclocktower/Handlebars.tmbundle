@@ -15,22 +15,23 @@
 # ...then you can put the cursor anywhere in the word "authorMeta", hit
 # ENTER (fn + return on laptop keyboards), and have that file open in
 # TextMate.
-#
-# This assumes that there is a file named "authorMeta" in the same directory
-# as the current file, and that it has the same file extension as the current
-# file.
-#
-# If this file doesn't exist, the command does nothing.
-#
+# 
+# This assumes that you've defined TM_HANDLEBARS_TEMPLATES_GLOB and that
+# there's a file whose base name is (e.g.) "authorMeta" that exists among the
+# paths described by the glob.
+# 
+# If you _haven't_ defined TM_HANDLEBARS_TEMPLATES_GLOB, the command assumes
+# that there is a file called (e.g.) "authorMeta" in the same directory (and
+# with the same extension) as the current file.
+# 
 # TODO:
 #
-# 1. Search in more than just the current directory. Maybe traverse upward
-#    until we hit the project root; maybe search a user-configurable list of
-#    paths that can be defined in .tm_properties.
-# 2. If there's more than one match, pop up a menu of possible matches.
+# * If there's more than one match, pop up a menu of possible matches.
 #
 #
 require 'pathname'
+require "#{ENV['TM_SUPPORT_PATH']}/lib/textmate"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/exit_codes"
 
 name = STDIN.read
 
@@ -54,15 +55,18 @@ paths = Pathname::glob(glob)
 match = paths.detect { |p| p.basename.to_s.start_with?("#{name}.") &amp;&amp; p.file? }
 
 if match
-  system "mate #{match}"
+  TextMate::go_to :file =&gt; match
 else
-  puts "Couldn’t find a partial with name: #{name}."
+  msg = "Couldn’t find a partial with name: #{name}.\n"
   if ENV.key?('TM_HANDLEBARS_TEMPLATES_GLOB')
-    puts "(Used your TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
+    msg &lt;&lt; "(Used your TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
   else
-    puts "(Searched the current directory; to search other directories, or file extensions other than #{file_path.extname}, add a TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
+    msg &lt;&lt; "(Searched the current directory; to search other directories, or file extensions other than #{file_path.extname}, add a TM_HANDLEBARS_TEMPLATES_GLOB environment variable.)"
   end
-end</string>
+  
+  TextMate::exit_show_tool_tip(msg)
+end
+</string>
 	<key>input</key>
 	<string>scope</string>
 	<key>inputFormat</key>
@@ -82,6 +86,6 @@ end</string>
 	<key>uuid</key>
 	<string>8A3658CC-D5EF-4F3E-93C3-717259110BEF</string>
 	<key>version</key>
-	<integer>2</integer>
+	<string>2</string>
 </dict>
 </plist>

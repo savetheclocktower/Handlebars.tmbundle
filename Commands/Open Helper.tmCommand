@@ -6,11 +6,31 @@
 	<string>nop</string>
 	<key>command</key>
 	<string>#!/usr/bin/env ruby -wKU
+
+# Attempts to open the helper whose name is under the cursor. For instance,
+# if you've got...
+#
+#     {{prune text 30}}
+#
+# ...then you can put the cursor anywhere in the word "prune", hit ENTER
+# (fn + return on laptop keyboards), and have that file open in
+# TextMate.
+# 
+# This makes several assumptions:
+# 
+# 1. each of your helpers is defined in its own individual file;
+# 2. the name of the file matches the name of the helper;
+# 3. you've defined TM_HANDLEBARS_HELPERS_GLOB so that this command knows
+#    where to look for helpers.
+# 
+# If #1 or #2 is impossible, pretend this command never existed.
+# 
 require 'pathname'
+require "#{ENV['TM_SUPPORT_PATH']}/lib/textmate"
+require "#{ENV['TM_SUPPORT_PATH']}/lib/exit_codes"
 
 unless ENV.key?('TM_HANDLEBARS_HELPERS_GLOB')
-  puts "You must define TM_HANDLEBARS_HELPERS_GLOB in your .tm_properties file."
-  exit
+  TextMate::exit_show_tool_tip(%Q{You must define TM_HANDLEBARS_HELPERS_GLOB in your .tm_properties file.})
 end
 
 paths  = Pathname::glob(ENV['TM_HANDLEBARS_HELPERS_GLOB'])
@@ -18,11 +38,13 @@ name   = STDIN.read.sub(/^(?:#|\/)/, '')
 target = paths.detect { |p| p.basename.to_s.start_with?("#{name}.") &amp;&amp; p.file? }
 
 if target
-  `mate #{target}`
+  TextMate::go_to(:file =&gt; target)
 else
-  puts "Can’t find file named: #{name}"
-  puts "(Check your TM_HANDLEBARS_HELPERS_GLOB variable.)"
-end</string>
+  msg =  "Can’t find file named: #{name}\n"
+  msg &lt;&lt; "(Check your TM_HANDLEBARS_HELPERS_GLOB variable.)"
+  TextMate::exit_show_tool_tip(msg)
+end
+</string>
 	<key>input</key>
 	<string>scope</string>
 	<key>inputFormat</key>
@@ -42,6 +64,6 @@ end</string>
 	<key>uuid</key>
 	<string>839C262D-65D7-49F7-B803-465DA55742EB</string>
 	<key>version</key>
-	<integer>2</integer>
+	<string>2</string>
 </dict>
 </plist>

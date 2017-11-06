@@ -114,8 +114,8 @@ Obviously you'd want to add stuff to it, but that's the basic idea. (Depending o
 
 To install via Git:
 
-    mkdir -p ~/Library/Application\ Support/Avian/Pristine\ Copy/Bundles
-    cd ~/Library/Application\ Support/Avian/Pristine\ Copy/Bundles
+    mkdir -p ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
+    cd ~/Library/Application\ Support/TextMate/Pristine\ Copy/Bundles
     git clone git://github.com/savetheclocktower/Handlebars.tmbundle.git
     osascript -e 'tell app "TextMate" to reload bundles'
     
